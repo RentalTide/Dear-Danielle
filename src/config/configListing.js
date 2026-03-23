@@ -53,166 +53,158 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
-  // {
-  //   "scope": "public",
-  //   "label": "Gears",
-  //   "key": "gears",
-  //   "schemaType": "long",
-  //   "numberConfig": {
-  //     "minimum": 1,
-  //     "maximum": 24
-  //   },
-  //   "filterConfig": {
-  //     "indexForSearch": true,
-  //     "group": "primary",
-  //     "label": "Gears"
-  //   }
-  // }
-  // {
-  //   key: 'bikeType',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'city-bikes', label: 'City bikes' },
-  //     { option: 'electric-bikes', label: 'Electric bikes' },
-  //     { option: 'mountain-bikes', label: 'Mountain bikes' },
-  //     { option: 'childrens-bikes', label: "Children's bikes" },
-  //   ],
-  //   categoryConfig: {
-  //     limitToCategoryIds: true,
-  //     categoryIds: ['cats'],
-  //   },
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
-  //     label: 'Bike type',
-  //     group: 'primary',
-  //   },
-  //   showConfig: {
-  //     label: 'Bike type',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Bike type',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a bike type.',
-  //   },
-  // },
-  // {
-  //   key: 'tire',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: '29', label: '29' },
-  //     { option: '28', label: '28' },
-  //     { option: '27', label: '27' },
-  //     { option: '26', label: '26' },
-  //     { option: '24', label: '24' },
-  //     { option: '20', label: '20' },
-  //     { option: '18', label: '18' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Tire size',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Tire size',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Tire size',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a tire size.',
-  //   },
-  // },
-  // {
-  //   key: 'brand',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'cube', label: 'Cube' },
-  //     { option: 'diamant', label: 'Diamant' },
-  //     { option: 'ghost', label: 'GHOST' },
-  //     { option: 'giant', label: 'Giant' },
-  //     { option: 'kalkhoff', label: 'Kalkhoff' },
-  //     { option: 'kona', label: 'Kona' },
-  //     { option: 'otler', label: 'Otler' },
-  //     { option: 'vermont', label: 'Vermont' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Brand',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Brand',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Brand',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a brand.',
-  //   },
-  // },
-  // {
-  //   key: 'accessories',
-  //   scope: 'public',
-  //   schemaType: 'multi-enum',
-  //   enumOptions: [
-  //     { option: 'bell', label: 'Bell' },
-  //     { option: 'lights', label: 'Lights' },
-  //     { option: 'lock', label: 'Lock' },
-  //     { option: 'mudguard', label: 'Mudguard' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Accessories',
-  //     searchMode: 'has_all',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Accessories',
-  //   },
-  //   saveConfig: {
-  //     label: 'Accessories',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: false,
-  //   },
-  // },
-  // // An example of how to use transaction type specific custom fields and private data.
-  // {
-  //   key: 'note',
-  //   scope: 'public',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['product-selling'],
-  //   },
-  //   showConfig: {
-  //     label: 'Extra notes',
-  //   },
-  //   saveConfig: {
-  //     label: 'Extra notes',
-  //     placeholderMessage: 'Some public extra note about this bike...',
-  //   },
-  // },
-  // {
-  //   key: 'privatenote',
-  //   scope: 'private',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['daily-booking'],
-  //   },
-  //   saveConfig: {
-  //     label: 'Private notes',
-  //     placeholderMessage: 'Some private note about this bike...',
-  //   },
-  // },
+  // Size selection (T-shirt sizes)
+  {
+    key: 'size',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'xxs', label: 'XXS' },
+      { option: 'xs', label: 'XS' },
+      { option: 's', label: 'S' },
+      { option: 'm', label: 'M' },
+      { option: 'l', label: 'L' },
+      { option: 'xl', label: 'XL' },
+      { option: 'xxl', label: 'XXL' },
+      { option: 'xxxl', label: '3XL' },
+      { option: 'one-size', label: 'One Size' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectMultipleFilter',
+      label: 'Size',
+      group: 'primary',
+    },
+    showConfig: {
+      label: 'Size',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Size',
+      placeholderMessage: 'Select a size…',
+      isRequired: true,
+      requiredMessage: 'Please select a size.',
+    },
+  },
+
+  // Occasion-based tags
+  {
+    key: 'occasion',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'wedding', label: 'Wedding' },
+      { option: 'date-night', label: 'Date Night' },
+      { option: 'work', label: 'Work' },
+      { option: 'casual', label: 'Casual' },
+      { option: 'formal', label: 'Formal' },
+      { option: 'cocktail', label: 'Cocktail' },
+      { option: 'vacation', label: 'Vacation' },
+      { option: 'brunch', label: 'Brunch' },
+      { option: 'festival', label: 'Festival' },
+      { option: 'party', label: 'Party' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Occasion',
+      searchMode: 'has_any',
+      group: 'primary',
+    },
+    showConfig: {
+      label: 'Occasion',
+    },
+    saveConfig: {
+      label: 'Occasion',
+      placeholderMessage: 'Select occasions…',
+      isRequired: false,
+    },
+  },
+
+  // Color
+  {
+    key: 'color',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'black', label: 'Black' },
+      { option: 'white', label: 'White' },
+      { option: 'red', label: 'Red' },
+      { option: 'blue', label: 'Blue' },
+      { option: 'green', label: 'Green' },
+      { option: 'pink', label: 'Pink' },
+      { option: 'purple', label: 'Purple' },
+      { option: 'orange', label: 'Orange' },
+      { option: 'yellow', label: 'Yellow' },
+      { option: 'brown', label: 'Brown' },
+      { option: 'gray', label: 'Gray' },
+      { option: 'navy', label: 'Navy' },
+      { option: 'beige', label: 'Beige' },
+      { option: 'gold', label: 'Gold' },
+      { option: 'silver', label: 'Silver' },
+      { option: 'multi', label: 'Multicolor' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectMultipleFilter',
+      label: 'Color',
+      group: 'secondary',
+    },
+    showConfig: {
+      label: 'Color',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Color',
+      placeholderMessage: 'Select a color…',
+      isRequired: true,
+      requiredMessage: 'Please select a color.',
+    },
+  },
+
+  // Brand
+  {
+    key: 'brand',
+    scope: 'public',
+    schemaType: 'text',
+    showConfig: {
+      label: 'Brand',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Brand',
+      placeholderMessage: 'e.g. Zara, Reformation, etc.',
+      isRequired: false,
+    },
+  },
+
+  // Condition
+  {
+    key: 'condition',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'new-with-tags', label: 'New with Tags' },
+      { option: 'like-new', label: 'Like New' },
+      { option: 'good', label: 'Good' },
+      { option: 'fair', label: 'Fair' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectMultipleFilter',
+      label: 'Condition',
+      group: 'secondary',
+    },
+    showConfig: {
+      label: 'Condition',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Condition',
+      placeholderMessage: 'Select condition…',
+      isRequired: true,
+      requiredMessage: 'Please select the item condition.',
+    },
+  },
 ];
 
 ///////////////////////////////////////////////////////////////////////
@@ -280,143 +272,22 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  // // Here are some examples of listingTypes
-  // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
-  // {
-  //   listingType: 'daily-booking',
-  //   label: 'Daily booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'day',
-  //   },
-  //   availabilityType: 'oneSeat',
-  //   defaultListingFields: {
-  //     location: true,
-  //     payoutDetails: true,
-  //   },
-  //   transactionFields: [
-  //     {
-  //       showTo: 'customer',
-  //       label: 'Extra requests for the hosts',
-  //       key: 'requests',
-  //       schemaType: 'text',
-  //     },
-  //     {
-  //       showTo: 'customer',
-  //       label: 'Are you traveling with minors?',
-  //       key: 'minors',
-  //       schemaType: 'boolean',
-  //     },
-  //     {
-  //       showTo: 'customer',
-  //       numberConfig: {
-  //         minimum: 1,
-  //         maximum: 10,
-  //       },
-  //       label: 'How many people are staying at the venue',
-  //       key: 'peopleStaying',
-  //       schemaType: 'long',
-  //       saveConfig: {
-  //         required: true,
-  //       },
-  //     },
-  //     {
-  //       showTo: 'customer',
-  //       enumOptions: [
-  //         {
-  //           label: 'Morning cleanup (10am-12am)',
-  //           option: 'morning',
-  //         },
-  //         {
-  //           label: 'Afternoon cleanup (2pm-4pm)',
-  //           option: 'afternoon',
-  //         },
-  //       ],
-  //       label: 'Schedule preference',
-  //       key: 'schedulePreference',
-  //       schemaType: 'enum',
-  //     },
-  //     {
-  //       showTo: 'customer',
-  //       enumOptions: [
-  //         {
-  //           label: 'Vegetarian',
-  //           option: 'vegetarian',
-  //         },
-  //         {
-  //           label: 'Vegan',
-  //           option: 'vegan',
-  //         },
-  //         {
-  //           label: 'Gluten free',
-  //           option: 'glutenFree',
-  //         },
-  //         {
-  //           label: 'No caffeine',
-  //           option: 'decaf',
-  //         },
-  //         {
-  //           label: 'Nut free',
-  //           option: 'nutFree',
-  //         },
-  //         {
-  //           label: 'Dairy free',
-  //           option: 'dairyFree',
-  //         },
-  //       ],
-  //       label: 'Dietary preferences',
-  //       key: 'dietaryPreferences',
-  //       schemaType: 'multi-enum',
-  //     },
-  //   ],
-  // },
-  // {
-  //   listingType: 'nightly-booking',
-  //   label: 'Nightly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'night',
-  //   },
-  // },
-  // {
-  //   listingType: 'hourly-booking',
-  //   label: 'Hourly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'hour',
-  //   },
-  // },
-  // {
-  //   listingType: 'product-selling',
-  //   label: 'Sell bicycles',
-  //   transactionType: {
-  //     process: 'default-purchase',
-  //     alias: 'default-purchase/release-1',
-  //     unitType: 'item',
-  //   },
-  //   stockType: 'multipleItems',
-  //   defaultListingFields: {
-  //     shipping: true,
-  //     pickup: true,
-  //     payoutDetails: true,
-  //   },
-  // },
-  // {
-  //   listingType: 'inquiry',
-  //   label: 'Inquiry',
-  //   transactionType: {
-  //     process: 'default-inquiry',
-  //     alias: 'default-inquiry/release-1',
-  //     unitType: 'inquiry',
-  //   },
-  //   defaultListingFields: {
-  //     price: false,
-  //     location: true,
-  //   },
-  // },
+  {
+    listingType: 'fashion-rental',
+    label: 'Fashion Rental',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+    defaultListingFields: {
+      location: false,
+      shipping: true,
+      pickup: false,
+      payoutDetails: true,
+    },
+  },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType

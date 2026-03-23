@@ -1,5 +1,9 @@
 @import '../../styles/customMediaQueries.css';
 
+.cardWrapper {
+  position: relative;
+}
+
 .root {
   /* Layout */
   display: flex;

@@ -1,0 +1,36 @@
+.root {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+
+  /* Reset button styles */
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  color: var(--colorGrey500);
+
+  &:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 1);
+  }
+}
+
+.favorited {
+  color: #e74c3c;
+}
+
+.heartIcon {
+  width: 20px;
+  height: 20px;
+}

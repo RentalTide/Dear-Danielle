@@ -1,0 +1,190 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--marketplaceColor);
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorWhite);
+  color: var(--marketplaceColor);
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: all var(--transitionStyleButton);
+  white-space: nowrap;
+
+  &:hover {
+    background-color: var(--marketplaceColor);
+    color: var(--colorWhite);
+  }
+
+  &:hover .sparkleIcon {
+    stroke: var(--colorWhite);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.buttonLoading {
+  composes: button;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  cursor: wait;
+}
+
+.sparkleIcon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--marketplaceColor);
+  fill: none;
+  transition: stroke var(--transitionStyleButton);
+}
+
+.sparkleIconLoading {
+  composes: sparkleIcon;
+  stroke: var(--colorWhite);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  stroke: var(--colorWhite);
+  stroke-width: 3px;
+}
+
+.suggestionsPanel {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+  background-color: #faf8ff;
+}
+
+.suggestionsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.suggestionsTitle {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--colorGrey700);
+  margin: 0;
+}
+
+.applyAllButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--borderRadiusMedium);
+  background-color: var(--colorPrimaryButton);
+  color: var(--colorWhite);
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+  font-size: 13px;
+  line-height: 18px;
+  cursor: pointer;
+  transition: all var(--transitionStyleButton);
+
+  &:hover {
+    background-color: var(--colorPrimaryButtonDark);
+  }
+}
+
+.suggestionItem {
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.suggestionLabel {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--colorGrey500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 2px 0;
+}
+
+.suggestionValue {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightRegular);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--colorGrey700);
+  margin: 0;
+}
+
+.descriptionPreview {
+  composes: suggestionValue;
+  font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-family: var(--fontFamily);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.errorText {
+  font-family: var(--fontFamily);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--colorFail);
+  margin: 8px 0 0 0;
+}
+
+.dismissButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--colorGrey500);
+  font-size: 18px;
+  line-height: 1;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+}

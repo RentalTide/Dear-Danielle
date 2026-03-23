@@ -12,8 +12,9 @@
 // This can be either 'keywords' or 'location'.
 // Note: The mainSearch comes from the listing-search asset nowadays by default.
 //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
+// Shipping-first flow: use keyword search instead of location
 export const mainSearch = {
-  searchType: 'location',
+  searchType: 'keywords',
 };
 
 /**
@@ -31,7 +32,7 @@ export const listingTypeFilter = {
 };
 
 export const categoryFilter = {
-  enabled: false,
+  enabled: true,
   schemaType: 'category',
   // schemaType, key, and other built-in config values are completely filled in configHelper.js
 };

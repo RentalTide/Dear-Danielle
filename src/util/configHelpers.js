@@ -1661,6 +1661,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Note: if footer asset is not set, Footer is not rendered.
     footer: configAsset.footer,
 
+    // Feature flags for Dear Danielle MVP (passed through from defaults, not hosted)
+    featureFlags: defaultConfigs.featureFlags,
+
     // Check if all the mandatory info have been retrieved from hosted assets
     hasMandatoryConfigurations: hasMandatoryConfigs(configAsset),
   };

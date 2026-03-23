@@ -6,6 +6,7 @@ import * as branding from './configBranding';
 import * as layout from './configLayout';
 import * as analytics from './configAnalytics';
 import * as user from './configUser';
+import { featureFlags } from './configFeatureFlags';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -59,6 +60,10 @@ const defaultConfig = {
   // Modify analytics configs in configAnalytics.js
   // By default, it doesn't add anything.
   analytics,
+
+  // Feature flags for Dear Danielle MVP features
+  // Modify in configFeatureFlags.js or override via REACT_APP_FF_* env vars
+  featureFlags,
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id

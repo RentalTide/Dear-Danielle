@@ -1,0 +1,52 @@
+@import '../../styles/customMediaQueries.css';
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+
+  @media (--viewportMedium) {
+    padding: 48px 24px;
+  }
+}
+
+.heading {
+  margin-bottom: 24px;
+}
+
+.loading {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--colorGrey500);
+}
+
+.noResults {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--colorGrey500);
+}
+
+.browseLink {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--marketplaceColor);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.listingCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.listingCard {
+  width: 100%;
+}

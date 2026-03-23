@@ -18,6 +18,9 @@ const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../cont
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
 const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingPage" */ '../containers/EditListingPage/EditListingPage'));
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
+const CartPage = loadable(() => import(/* webpackChunkName: "CartPage" */ '../containers/CartPage/CartPage'));
+const CartCheckoutPage = loadable(() => import(/* webpackChunkName: "CartCheckoutPage" */ '../containers/CartCheckoutPage/CartCheckoutPage'));
+const FavoritesPage = loadable(() => import(/* webpackChunkName: "FavoritesPage" */ '../containers/FavoritesPage/FavoritesPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
 const MakeOfferPage = loadable(() => import(/* webpackChunkName: "MakeOfferPage" */ '../containers/MakeOfferPage/MakeOfferPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
@@ -105,6 +108,28 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
       prioritizeMapLibraryLoading: isSearchPageWithMap,
+    },
+    {
+      path: '/cart',
+      name: 'CartPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: CartPage,
+    },
+    {
+      path: '/cart/checkout',
+      name: 'CartCheckoutPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: CartCheckoutPage,
+    },
+    {
+      path: '/favorites',
+      name: 'FavoritesPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: FavoritesPage,
+      loadData: pageDataLoadingAPI.FavoritesPage.loadData,
     },
     {
       path: '/l',

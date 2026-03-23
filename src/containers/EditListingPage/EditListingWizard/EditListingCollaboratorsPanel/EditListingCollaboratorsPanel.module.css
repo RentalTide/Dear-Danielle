@@ -1,0 +1,117 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  flex-grow: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.collaboratorList {
+  margin: 24px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.collaboratorItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--colorGrey100);
+}
+
+.collaboratorId {
+  font-size: 14px;
+  color: var(--colorGrey700);
+  word-break: break-all;
+}
+
+.removeButton {
+  composes: buttonSmall from global;
+  background-color: var(--colorFail);
+  color: var(--colorWhite);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.removeButton:hover {
+  background-color: var(--colorFailDark);
+}
+
+.addForm {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.inputWrapper {
+  flex-grow: 1;
+}
+
+.label {
+  display: block;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--colorGrey700);
+}
+
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--colorGrey300);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--marketplaceColor);
+}
+
+.addButton {
+  composes: buttonSmall from global;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background-color: var(--marketplaceColorDark);
+}
+
+.addButton:disabled {
+  background-color: var(--colorGrey300);
+  cursor: not-allowed;
+}
+
+.emptyState {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--colorGrey500);
+}
+
+.error {
+  color: var(--colorFail);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.loading {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--colorGrey500);
+}

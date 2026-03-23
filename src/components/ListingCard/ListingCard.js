@@ -2,13 +2,16 @@
 // please reflect those changes in the calculateCarouselHeight function in SectionListing.js to avoid layout issues
 import React from 'react';
 import classNames from 'classnames';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useConfiguration } from '../../context/configurationContext';
 
 import { useIntl } from '../../util/reactIntl';
+import { isFeatureEnabled } from '../../util/featureFlags';
 import { requireListingImage } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { createSlug } from '../../util/urlHelpers';
+import { selectFavoriteIds, toggleFavorite } from '../../ducks/favorites.duck';
 
 import {
   AspectRatioWrapper,
@@ -16,6 +19,8 @@ import {
   ResponsiveImage,
   ListingCardThumbnail,
 } from '../../components';
+
+import FavoriteButton from '../FavoriteButton/FavoriteButton';
 
 import { getListingCardTranslations } from './ListingCard.helpers';
 
@@ -98,6 +103,7 @@ const ListingCardImage = props => {
 export const ListingCard = props => {
   const config = useConfiguration();
   const intl = props.intl || useIntl();
+  const dispatch = useDispatch();
 
   const {
     className,
@@ -110,6 +116,12 @@ export const ListingCard = props => {
     showAuthorInfo = true,
     lazyLoadImage = true,
   } = props;
+
+  // Favoriting support
+  const favoritingEnabled = isFeatureEnabled(config, 'enableFavoriting');
+  const favoriteIds = useSelector(selectFavoriteIds);
+  const currentUser = useSelector(state => state.user?.currentUser);
+  const isAuthenticated = !!currentUser?.id;
 
   const translations = getListingCardTranslations(listing, config, intl);
   const {
@@ -148,55 +160,71 @@ export const ListingCard = props => {
       }
     : null;
 
+  const listingIdStr = listing?.id?.uuid;
+  const isFavorited = favoritingEnabled && favoriteIds.includes(listingIdStr);
+  const handleToggleFavorite = listingIdToToggle => {
+    dispatch(toggleFavorite(listingIdToToggle));
+  };
+
   return (
-    <NamedLink
-      className={classes}
-      name="ListingPage"
-      params={{ id, slug }}
-      ariaLabel={cardAriaLabel}
-    >
-      {showListingImage ? (
-        <ListingCardImage
-          renderSizes={renderSizes}
-          title={titlePlain}
-          listing={listing}
-          setActivePropsMaybe={setActivePropsMaybe}
-          aspectWidth={aspectWidth}
-          aspectHeight={aspectHeight}
-          variantPrefix={variantPrefix}
-          aspectRatioClassName={aspectRatioClassName}
-          lazyLoadImage={lazyLoadImage}
-        />
-      ) : (
-        <ListingCardThumbnail
-          style={cardStyle}
-          listingTitle={title}
-          className={aspectRatioClassName}
-          width={aspectWidth}
-          height={aspectHeight}
-          setActivePropsMaybe={setActivePropsMaybe}
+    <div className={css.cardWrapper}>
+      {favoritingEnabled && (
+        <FavoriteButton
+          listingId={listingIdStr}
+          isFavorited={isFavorited}
+          onToggle={handleToggleFavorite}
+          isAuthenticated={isAuthenticated}
         />
       )}
-      <div className={css.info}>
-        {showPrice ? (
-          <div className={css.price} title={priceTooltip}>
-            {priceMessage}
-          </div>
-        ) : null}
-        <div className={css.mainInfo}>
-          {showListingImage && (
-            <div className={classNames(css.title, { [css.lightText]: darkMode })}>
-              {titleFormatted}
-            </div>
-          )}
-          {showAuthorInfo ? (
-            <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
-              {authorName}
+      <NamedLink
+        className={classes}
+        name="ListingPage"
+        params={{ id, slug }}
+        ariaLabel={cardAriaLabel}
+      >
+        {showListingImage ? (
+          <ListingCardImage
+            renderSizes={renderSizes}
+            title={titlePlain}
+            listing={listing}
+            setActivePropsMaybe={setActivePropsMaybe}
+            aspectWidth={aspectWidth}
+            aspectHeight={aspectHeight}
+            variantPrefix={variantPrefix}
+            aspectRatioClassName={aspectRatioClassName}
+            lazyLoadImage={lazyLoadImage}
+          />
+        ) : (
+          <ListingCardThumbnail
+            style={cardStyle}
+            listingTitle={title}
+            className={aspectRatioClassName}
+            width={aspectWidth}
+            height={aspectHeight}
+            setActivePropsMaybe={setActivePropsMaybe}
+          />
+        )}
+        <div className={css.info}>
+          {showPrice ? (
+            <div className={css.price} title={priceTooltip}>
+              {priceMessage}
             </div>
           ) : null}
+          <div className={css.mainInfo}>
+            {showListingImage && (
+              <div className={classNames(css.title, { [css.lightText]: darkMode })}>
+                {titleFormatted}
+              </div>
+            )}
+            {showAuthorInfo ? (
+              <div className={classNames(css.authorInfo, { [css.lightText]: darkMode })}>
+                {authorName}
+              </div>
+            ) : null}
+          </div>
         </div>
-      </div>
-    </NamedLink>
+      </NamedLink>
+    </div>
   );
 };
 

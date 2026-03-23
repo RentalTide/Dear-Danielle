@@ -35,6 +35,7 @@ import {
 } from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../../transactions/transaction';
+import { isFeatureEnabled } from '../../../util/featureFlags';
 
 // Import shared components
 import {
@@ -56,6 +57,7 @@ import EditListingWizardTab, {
   AVAILABILITY,
   PHOTOS,
   STYLE,
+  COLLABORATORS,
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
@@ -80,7 +82,7 @@ const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
  * @param {Object} listingTypeConfig - The listing type configuration
  * @returns {Array<string>} - The allowed tabs for the given process and listing type configuration
  */
-const tabsForListingType = (processName, listingTypeConfig) => {
+const tabsForListingType = (processName, listingTypeConfig, config) => {
   const locationMaybe = displayLocation(listingTypeConfig) ? [LOCATION] : [];
   const pricingMaybe = displayPrice(listingTypeConfig) ? [PRICING] : [];
   const deliveryMaybe =
@@ -146,6 +148,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === STYLE) {
     labelKey = 'EditListingWizard.tabLabelStyle';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveStyle`;
+  } else if (tab === COLLABORATORS) {
+    labelKey = 'EditListingWizard.tabLabelCollaborators';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveCollaborators`;
   }
 
   return {
@@ -266,6 +271,9 @@ const tabCompleted = (tab, listing, config) => {
       return images && images.length > 0;
     case STYLE:
       return !!cardStyle;
+    case COLLABORATORS:
+      // Collaborators tab is always considered complete; it does not block listing creation.
+      return true;
     default:
       return false;
   }
@@ -540,10 +548,18 @@ class EditListingWizard extends Component {
       existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
 
     // For oudated draft listing, we don't show other tabs but the "details"
-    const tabs =
+    const baseTabs =
       isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
-        : tabsForListingType(processName, listingTypeConfig);
+        : tabsForListingType(processName, listingTypeConfig, config);
+
+    // Collaborators tab is appended only in edit mode (not during new listing creation)
+    // and only when the enableMultiUserManagement feature flag is on.
+    const collaboratorsMaybe =
+      !isNewListingFlow && isFeatureEnabled(config, 'enableMultiUserManagement')
+        ? [COLLABORATORS]
+        : [];
+    const tabs = [...baseTabs, ...collaboratorsMaybe];
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.

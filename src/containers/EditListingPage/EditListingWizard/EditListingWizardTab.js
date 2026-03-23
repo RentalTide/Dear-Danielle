@@ -18,6 +18,7 @@ import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPa
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 import EditListingStylePanel from './EditListingStylePanel/EditListingStylePanel';
+import EditListingCollaboratorsPanel from './EditListingCollaboratorsPanel/EditListingCollaboratorsPanel';
 
 import css from './EditListingWizardTab.module.css';
 
@@ -29,6 +30,7 @@ export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
 export const PHOTOS = 'photos';
 export const STYLE = 'style';
+export const COLLABORATORS = 'collaborators';
 
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
@@ -40,6 +42,7 @@ export const SUPPORTED_TABS = [
   AVAILABILITY,
   PHOTOS,
   STYLE,
+  COLLABORATORS,
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
@@ -275,6 +278,9 @@ const EditListingWizardTab = props => {
           images={images}
         />
       );
+    }
+    case COLLABORATORS: {
+      return <EditListingCollaboratorsPanel {...panelProps(COLLABORATORS)} />;
     }
     default:
       return null;
