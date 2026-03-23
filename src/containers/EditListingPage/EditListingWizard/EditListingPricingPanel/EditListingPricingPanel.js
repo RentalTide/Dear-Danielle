@@ -42,12 +42,18 @@ const getInitialValues = props => {
   // Note: publicData contains priceVariationsEnabled if listing is created with priceVariations enabled.
   const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, listingTypeConfig);
 
+  // Card hold amount from publicData
+  const holdAmountCents = publicData?.holdAmountCents;
+  const currency = listing?.attributes?.price?.currency || 'USD';
+  const holdAmount = holdAmountCents ? new Money(holdAmountCents, currency) : null;
+
   return unitType === FIXED || isPriceVariationsInUse
     ? {
         ...getInitialValuesForPriceVariants(props, isPriceVariationsInUse),
         ...getInitialValuesForStartTimeInterval(props),
+        holdAmount,
       }
-    : { price: listing?.attributes?.price };
+    : { price: listing?.attributes?.price, holdAmount };
 };
 
 // This is needed to show the listing's price consistently over XHR calls.
@@ -162,7 +168,8 @@ const EditListingPricingPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price } = values;
+            const { price, holdAmount } = values;
+            const holdAmountCents = holdAmount?.amount || null;
 
             // New values for listing attributes
             let updateValues = {};
@@ -193,6 +200,7 @@ const EditListingPricingPanel = props => {
                   priceVariationsEnabled: isPriceVariationsInUse,
                   ...startTimeIntervalChanges.publicData,
                   ...priceVariantChanges.publicData,
+                  holdAmountCents,
                 },
               };
             } else {
@@ -200,10 +208,15 @@ const EditListingPricingPanel = props => {
                 ? {
                     publicData: {
                       priceVariationsEnabled: false,
+                      holdAmountCents,
                     },
                   }
                 : {};
               updateValues = { price, ...priceVariationsEnabledMaybe };
+              // For non-booking processes, still save holdAmountCents
+              if (!isBooking && holdAmountCents != null) {
+                updateValues.publicData = { ...updateValues.publicData, holdAmountCents };
+              }
             }
 
             // Save the initialValues to state

@@ -5,6 +5,8 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
+import { useConfiguration } from '../../../../context/configurationContext';
+import { isFeatureEnabled } from '../../../../util/featureFlags';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
@@ -143,6 +145,9 @@ export const EditListingPricingAndStockForm = props => (
       } = formRenderProps;
 
       const intl = useIntl();
+      const config = useConfiguration();
+      const cardHoldsEnabled = config?.featureFlags?.enableCardHolds === true;
+
       const priceValidators = getPriceValidators(
         listingMinimumPriceSubUnits,
         marketplaceCurrency,
@@ -195,6 +200,17 @@ export const EditListingPricingAndStockForm = props => (
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
           />
+
+          {cardHoldsEnabled ? (
+            <FieldCurrencyInput
+              id={`${formId}.holdAmount`}
+              name="holdAmount"
+              className={css.input}
+              label="Card hold amount"
+              placeholder="Leave empty to hold the full rental price"
+              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+            />
+          ) : null}
 
           <UpdateStockToInfinityCheckboxMaybe
             formId={formId}

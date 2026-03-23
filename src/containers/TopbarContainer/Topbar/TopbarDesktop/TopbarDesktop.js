@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../util/reactIntl';
+import { isFeatureEnabled } from '../../../../util/featureFlags';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { selectCartItemCount, toggleDrawer } from '../../../../ducks/cart.duck';
 import {
   Avatar,
+  CartIcon,
   InlineTextButton,
   LinkedLogo,
   Menu,
@@ -183,6 +187,14 @@ const TopbarDesktop = props => {
   const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
   const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
 
+  // Cart icon (gated by feature flag)
+  const dispatch = useDispatch();
+  const cartItemCount = useSelector(selectCartItemCount);
+  const cartEnabled = isFeatureEnabled(config, 'enableCart');
+  const cartIconMaybe = cartEnabled ? (
+    <CartIcon count={cartItemCount} onClick={() => dispatch(toggleDrawer())} />
+  ) : null;
+
   const searchFormMaybe = showSearchForm ? (
     <TopbarSearchForm
       className={classNames(css.searchLink, { [css.takeAvailableSpace]: giveSpaceForSearch })}
@@ -221,6 +233,7 @@ const TopbarDesktop = props => {
         showCreateListingsLink={showCreateListingsLink}
       />
 
+      {cartIconMaybe}
       {inboxLinkMaybe}
       {profileMenuMaybe}
       {signupLinkMaybe}

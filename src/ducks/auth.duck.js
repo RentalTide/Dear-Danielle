@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as log from '../util/log';
 import { storableError } from '../util/errors';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
+import { loadFavoritesThunk } from './favorites.duck';
 import { createUserWithIdp } from '../util/api';
 
 const authenticated = authInfo => authInfo?.isAnonymous === false;
@@ -63,7 +64,10 @@ const loginThunk = createAsyncThunk(
       .then(() => {
         return dispatch(fetchCurrentUser({ afterLogin: true }));
       })
-      .then(() => ({ username, password }))
+      .then(() => {
+        dispatch(loadFavoritesThunk());
+        return { username, password };
+      })
       .catch(e => rejectWithValue(storableError(e)));
   },
   {

@@ -1268,9 +1268,9 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
   const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
     defaultConfigs.listing || {};
 
-  // When debugging, include default configs by passing 'true' here.
-  // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  // Dear Danielle: merge code-based listing types/fields with hosted assets
+  // so our custom fields (size, occasion, color, etc.) and listing type are always included.
+  const shouldMerge = true;
   const listingTypes = shouldMerge
     ? union(hostedListingTypes, defaultListingTypes, 'listingType')
     : hostedListingTypes;
@@ -1294,9 +1294,8 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   const { userFields: defaultUserFields, userTypes: defaultUserTypes } = defaultConfigs.user;
 
-  // When debugging, include default configs by passing 'true' here.
-  // Otherwise, use user fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  // Dear Danielle: merge code-based user types/fields with hosted assets
+  const shouldMerge = true;
   const userTypes = shouldMerge
     ? union(hostedUserTypes, defaultUserTypes, 'userType')
     : hostedUserTypes;

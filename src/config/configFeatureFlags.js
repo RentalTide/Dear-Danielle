@@ -7,9 +7,6 @@
 // REACT_APP_FF_ENABLE_FASHION_CATEGORIES=true (etc.)
 
 export const featureFlags = {
-  // Fashion product categories (Dresses, Tops, Bottoms, etc.)
-  enableFashionCategories: true,
-
   // Closet style favoriting (heart icon on listings, /favorites page)
   enableFavoriting: true,
 
@@ -22,14 +19,18 @@ export const featureFlags = {
   // Configurable card holds (manual capture via fashion-rental process)
   enableCardHolds: true,
 
+  // Card hold configuration
+  cardHold: {
+    // Hold amount in cents (e.g. 5000 = $50.00). Set to 0 to hold the full rental price.
+    holdAmountCents: 0,
+    // Number of days the hold lasts before auto-capture
+    holdDurationDays: 7,
+    // Number of days before auto-decline (refund) if provider doesn't respond
+    autoDeclineDays: 14,
+  },
+
   // Multi-user product management (listing collaborators)
   enableMultiUserManagement: true,
-
-  // T-shirt size selection on listings
-  enableSizeSelection: true,
-
-  // Occasion-based tags and filtering
-  enableOccasionTags: true,
 
   // AI-powered listing description assistance
   enableAIListingAssistance: true,

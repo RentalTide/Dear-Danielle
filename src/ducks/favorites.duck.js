@@ -7,12 +7,39 @@ import { addMarketplaceEntities } from './marketplaceData.duck';
 // ================ Async thunks ================ //
 
 /**
- * Toggle a listing as favorite. Reads the current user's privateData.favorites,
- * adds or removes the listing ID, and updates the profile.
+ * Load the current user's favorite IDs from their privateData.
+ * Makes a dedicated currentUser.show call that includes privateData.
+ */
+const loadFavoritesPayloadCreator = (_, { extra: sdk, rejectWithValue }) => {
+  return sdk.currentUser
+    .show()
+    .then(response => {
+      const user = response.data.data;
+      const favorites = user?.attributes?.profile?.privateData?.favorites || [];
+      return { favoriteIds: favorites };
+    })
+    .catch(e => {
+      const error = storableError(e);
+      log.error(error, 'load-favorites-failed');
+      return rejectWithValue(error);
+    });
+};
+
+export const loadFavoritesThunk = createAsyncThunk(
+  'favorites/loadFavorites',
+  loadFavoritesPayloadCreator
+);
+
+export const loadFavorites = () => dispatch => {
+  return dispatch(loadFavoritesThunk()).unwrap();
+};
+
+/**
+ * Toggle a listing as favorite. Uses Redux state (not currentUser) as source of truth
+ * for the current favorites list, then persists to the user's privateData.
  */
 const toggleFavoritePayloadCreator = ({ listingId }, { getState, extra: sdk, rejectWithValue }) => {
-  const currentUser = getState().user?.currentUser;
-  const currentFavorites = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const currentFavorites = getState().favorites.favoriteIds || [];
   const listingIdStr = listingId?.uuid || listingId;
 
   const isFavorited = currentFavorites.includes(listingIdStr);
@@ -22,7 +49,7 @@ const toggleFavoritePayloadCreator = ({ listingId }, { getState, extra: sdk, rej
 
   return sdk.currentUser
     .updateProfile({ privateData: { favorites: updatedFavorites } }, { expand: true })
-    .then(response => {
+    .then(() => {
       return { favoriteIds: updatedFavorites, listingId: listingIdStr, isFavorited: !isFavorited };
     })
     .catch(e => {
@@ -37,7 +64,6 @@ export const toggleFavoriteThunk = createAsyncThunk(
   toggleFavoritePayloadCreator
 );
 
-// Backward compatible wrapper
 export const toggleFavorite = listingId => dispatch => {
   return dispatch(toggleFavoriteThunk({ listingId })).unwrap();
 };
@@ -46,8 +72,7 @@ export const toggleFavorite = listingId => dispatch => {
  * Fetch listing entities for all favorited listing IDs.
  */
 const fetchFavoriteListingsPayloadCreator = (_, { getState, extra: sdk, dispatch, rejectWithValue }) => {
-  const currentUser = getState().user?.currentUser;
-  const favoriteIds = currentUser?.attributes?.profile?.privateData?.favorites || [];
+  const favoriteIds = getState().favorites.favoriteIds || [];
 
   if (favoriteIds.length === 0) {
     return { data: [] };
@@ -87,6 +112,8 @@ export const fetchFavoriteListings = () => dispatch => {
 const initialState = {
   favoriteIds: [],
   favoriteListingRefs: [],
+  loadInProgress: false,
+  loadError: null,
   toggleInProgress: false,
   toggleError: null,
   fetchInProgress: false,
@@ -102,6 +129,20 @@ const favoritesSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // Load favorites from user privateData
+    builder.addCase(loadFavoritesThunk.pending, state => {
+      state.loadInProgress = true;
+      state.loadError = null;
+    });
+    builder.addCase(loadFavoritesThunk.fulfilled, (state, action) => {
+      state.loadInProgress = false;
+      state.favoriteIds = action.payload.favoriteIds;
+    });
+    builder.addCase(loadFavoritesThunk.rejected, (state, action) => {
+      state.loadInProgress = false;
+      state.loadError = action.payload;
+    });
+
     // Toggle favorite
     builder.addCase(toggleFavoriteThunk.pending, state => {
       state.toggleInProgress = true;
@@ -139,13 +180,5 @@ export const { setFavoriteIds } = favoritesSlice.actions;
 export const selectFavoriteIds = state => state.favorites.favoriteIds;
 export const selectToggleInProgress = state => state.favorites.toggleInProgress;
 export const selectFetchInProgress = state => state.favorites.fetchInProgress;
-
-// ================ Action to initialize from currentUser ================ //
-
-export const loadFavorites = () => (dispatch, getState) => {
-  const currentUser = getState().user?.currentUser;
-  const favoriteIds = currentUser?.attributes?.profile?.privateData?.favorites || [];
-  dispatch(setFavoriteIds(favoriteIds));
-};
 
 export default favoritesSlice.reducer;

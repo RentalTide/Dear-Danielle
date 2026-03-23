@@ -38,6 +38,7 @@ import * as log from './util/log';
 import { authInfo } from './ducks/auth.duck';
 import { fetchAppAssets } from './ducks/hostedAssets.duck';
 import { fetchCurrentUser } from './ducks/user.duck';
+import { loadFavoritesThunk } from './ducks/favorites.duck';
 
 // Route config
 import routeConfiguration from './routing/routeConfiguration';
@@ -64,6 +65,11 @@ const render = (store, shouldHydrate) => {
       ]);
     })
     .then(([_, fetchedAppAssets, cu]) => {
+      // Load user's favorites after auth is resolved
+      const isAuthenticated = store.getState().auth.isAuthenticated;
+      if (isAuthenticated) {
+        store.dispatch(loadFavoritesThunk());
+      }
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
       // We'll handle translations as a separate data.
       // It's given to React Intl instead of pushing to config Context

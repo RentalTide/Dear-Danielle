@@ -32,6 +32,12 @@ const getInitialValues = props => {
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
   const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
 
+  // Card hold amount from publicData (stored in cents as a Money object)
+  const holdAmountCents = publicData?.holdAmountCents;
+  const holdAmount = holdAmountCents
+    ? new Money(holdAmountCents, listing?.attributes?.price?.currency || 'USD')
+    : null;
+
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   // Note: infinite stock is refilled to billiard using "stockUpdateMaybe"
@@ -46,7 +52,7 @@ const getInitialValues = props => {
       : 1;
   const stockTypeInfinity = [];
 
-  return { price, stock, stockTypeInfinity };
+  return { price, stock, stockTypeInfinity, holdAmount };
 };
 
 /**
@@ -145,7 +151,7 @@ const EditListingPricingAndStockPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, stock, stockTypeInfinity } = values;
+            const { price, stock, stockTypeInfinity, holdAmount } = values;
 
             // Update stock only if the value has changed, or stock is infinity in stockType,
             // but not current stock is a small number (might happen with old listings)
@@ -174,10 +180,17 @@ const EditListingPricingAndStockPanel = props => {
                   }
                 : {};
 
+            // Card hold amount stored in publicData as cents
+            const holdAmountCents = holdAmount?.amount || 0;
+            const holdPublicData = holdAmountCents > 0
+              ? { publicData: { holdAmountCents } }
+              : { publicData: { holdAmountCents: null } };
+
             // New values for listing attributes
             const updateValues = {
               price,
               ...stockUpdateMaybe,
+              ...holdPublicData,
             };
             // Save the initialValues to state
             // Otherwise, re-rendering would overwrite the values during XHR call.
@@ -186,6 +199,7 @@ const EditListingPricingAndStockPanel = props => {
                 price,
                 stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
                 stockTypeInfinity,
+                holdAmount,
               },
             });
             onSubmit(updateValues);

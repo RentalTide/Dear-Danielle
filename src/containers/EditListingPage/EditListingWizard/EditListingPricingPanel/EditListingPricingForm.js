@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
+import { useConfiguration } from '../../../../context/configurationContext';
 import { FormattedMessage, useIntl } from '../../../../util/reactIntl';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
@@ -119,6 +120,9 @@ export const EditListingPricingForm = props => (
       } = formRenderProps;
 
       const intl = useIntl();
+      const config = useConfiguration();
+      const cardHoldsEnabled = config?.featureFlags?.enableCardHolds === true;
+
       const priceValidators = getPriceValidators(
         listingMinimumPriceSubUnits,
         marketplaceCurrency,
@@ -170,6 +174,17 @@ export const EditListingPricingForm = props => (
               validate={priceValidators}
             />
           )}
+
+          {cardHoldsEnabled ? (
+            <FieldCurrencyInput
+              id={`${formId}holdAmount`}
+              name="holdAmount"
+              className={css.input}
+              label="Card hold amount"
+              placeholder="Leave empty to hold the full rental price"
+              currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+            />
+          ) : null}
 
           {isFixedLengthBooking ? (
             <StartTimeInterval

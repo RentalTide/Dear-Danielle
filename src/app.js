@@ -19,7 +19,8 @@ import { IntlProvider } from './util/reactIntl';
 import { includeCSSProperties } from './util/style';
 import { IncludeScripts } from './util/includeScripts';
 
-import { MaintenanceMode } from './components';
+import { CartDrawer, MaintenanceMode } from './components';
+import { loadFromStorage as loadCartFromStorage } from './ducks/cart.duck';
 
 // routing
 import routeConfiguration from './routing/routeConfiguration';
@@ -243,6 +244,9 @@ export const ClientApp = props => {
   const elem = window.document.documentElement;
   includeCSSProperties(appConfig.branding, elem);
 
+  // Initialize cart from localStorage
+  store.dispatch(loadCartFromStorage());
+
   // This gives good input for debugging issues on live environments, but with test it's not needed.
   const logLoadDataCalls = appSettings?.env !== 'test';
 
@@ -258,6 +262,7 @@ export const ClientApp = props => {
             <IncludeScripts config={appConfig} initialPathname={window.location.pathname} />
             <BrowserRouter>
               <Routes logLoadDataCalls={logLoadDataCalls} />
+              <CartDrawer />
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
