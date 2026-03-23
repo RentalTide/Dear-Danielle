@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
+import { useConfiguration } from '../../../../context/configurationContext';
 import {
   EXTENDED_DATA_SCHEMA_TYPES,
   LISTING_STATE_DRAFT,
@@ -18,7 +19,7 @@ import {
 import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
-import { H3, ListingLink } from '../../../../components';
+import { AIAssistButton, H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import ErrorMessage from './ErrorMessage';
@@ -379,6 +380,26 @@ const EditListingDetailsPanel = props => {
       <H3 as="h1">
         <FormattedMessage id={panelHeadingProps.id} values={{ ...panelHeadingProps.values }} />
       </H3>
+
+      {canShowEditListingDetailsForm && config?.featureFlags?.enableAIListingAssistance ? (
+        <AIAssistButton
+          imageUrls={listing?.images?.map(img => {
+            const variants = img?.attributes?.variants || {};
+            const variant = variants['listing-card-2x'] || variants['listing-card'] || Object.values(variants)[0];
+            return variant?.url;
+          }).filter(Boolean)}
+          category={listing?.attributes?.publicData?.categoryLevel1}
+          title={listing?.attributes?.title}
+          onApply={suggestions => {
+            // The form ref isn't directly accessible here, so we store suggestions
+            // for the form to pick up. For MVP, the user can manually apply.
+            if (suggestions?.description && listing?.attributes) {
+              // Auto-fill will be handled by the form component in a future iteration
+              console.log('AI suggestions:', suggestions);
+            }
+          }}
+        />
+      ) : null}
 
       {canShowEditListingDetailsForm ? (
         <EditListingDetailsForm

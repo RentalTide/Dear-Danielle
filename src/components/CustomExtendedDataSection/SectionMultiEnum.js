@@ -12,9 +12,9 @@ const SectionMultiEnum = props => {
     idPrefix,
     className,
     rootClassName,
-    showUnselectedOptions = true,
+    showUnselectedOptions = false,
   } = props;
-  const hasContent = showUnselectedOptions || selectedOptions?.length > 0;
+  const hasContent = selectedOptions?.length > 0;
   if (!heading || !options || !hasContent) {
     return null;
   }
@@ -22,19 +22,21 @@ const SectionMultiEnum = props => {
 
   const classes = classNames(rootClassName || css.sectionMultiEnum, className);
 
+  // Render as tags for fashion marketplace
+  const selectedTags = options.filter(o => selectedOptions.includes(o.key));
+
   return (
     <section className={classes}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         {heading}
       </Heading>
-      <PropertyGroup
-        id={`${idPrefix}.${idSlug}`}
-        ariaLabel={heading}
-        options={options}
-        selectedOptions={selectedOptions}
-        twoColumns={options.length > 5}
-        showUnselectedOptions={showUnselectedOptions}
-      />
+      <div className={css.tagList}>
+        {selectedTags.map(tag => (
+          <span key={tag.key} className={css.tag}>
+            {tag.label}
+          </span>
+        ))}
+      </div>
     </section>
   );
 };

@@ -1,52 +1,143 @@
 @import '../../styles/customMediaQueries.css';
 
+/* ============================================
+   Dear Danielle — Listing Detail Styling
+   Editorial luxury aesthetic
+   ============================================ */
+
 .sectionHeading,
 .sectionHeadingWithExtraMargin {
-  /* Font for sections titles */
-  composes: p from global;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: hsl(240 3% 45%);
   padding: 0;
-  font-weight: var(--fontWeightBold);
-
-  margin-top: 0;
-  margin-bottom: 12px;
+  margin: 0 0 14px 0;
+  position: relative;
 
   @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 8px;
+    margin: 0 0 16px 0;
   }
 }
 
-.sectionDetails,
-.sectionMultiEnum,
-.sectionEmbeddedYoutubeVideo {
-  padding: 0px 24px;
-  margin-bottom: 24px;
+.sectionHeadingWithExtraMargin {
+  margin-top: 8px;
+}
+
+/* ---- Details Section (enum/long/boolean fields) ---- */
+
+.sectionDetails {
+  padding: 0 24px;
+  margin-bottom: 28px;
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
 }
-.video {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
+
+.details {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-.iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
+
+.detailsRow {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid hsl(240 3% 88%);
+  border-radius: 4px;
+  background: transparent;
+  transition: border-color 0.2s ease;
+}
+
+.detailsRow:hover {
+  border-color: hsl(240 3% 70%);
+}
+
+.detailLabel {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: hsl(240 3% 50%);
+}
+
+/* Separator between label and value */
+.detailLabel::after {
+  content: ':';
+}
+
+/* The value */
+.detailsRow > span:last-child {
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(240 3% 12%);
+  letter-spacing: 0.2px;
+}
+
+/* ---- Multi-Enum Section (occasion tags, etc.) ---- */
+
+.sectionMultiEnum {
+  padding: 0 24px;
+  margin-bottom: 28px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 32px;
+  }
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px;
+  border: 1px solid hsl(240 3% 85%);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: hsl(240 3% 30%);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: hsl(240 3% 96%);
+  border-color: hsl(240 3% 70%);
+}
+
+/* ---- Text Section ---- */
+
+.sectionText {
+  padding: 0 24px;
+  margin-bottom: 28px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 32px;
+  }
 }
 
 .ingress {
-  composes: p from global;
+  font-size: 15px;
+  line-height: 1.65;
+  color: hsl(240 3% 25%);
   margin: 0;
-
-  /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
 
   @media (--viewportMedium) {
@@ -55,11 +146,12 @@
 }
 
 .text {
-  font-weight: var(--fontWeightRegular);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: hsl(240 3% 30%);
   padding: 1px 0 5px 0;
   margin: 0;
-
-  /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
 
   @media (--viewportMedium) {
@@ -73,41 +165,157 @@
   hyphens: auto;
 }
 
-.sectionText {
-  padding: 0px 24px;
-  margin-bottom: 24px;
+/* ---- YouTube Video Section ---- */
+
+.sectionEmbeddedYoutubeVideo {
+  padding: 0 24px;
+  margin-bottom: 28px;
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
 }
 
-.details {
-  padding-bottom: 1px;
-  margin: 0;
+.video {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
-.detailsRow {
-  display: inline-flex;
-  justify-content: space-between;
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   width: 100%;
-  list-style: none;
-  font-weight: var(--fontWeightRegular);
-  line-height: 24px;
-  padding: 7px 0px 10px;
-  gap: 8px;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--colorGrey100);
-  }
-
-  @media (--viewportMedium) {
-    padding: 5px 0 2px 0;
-    line-height: 32px;
-  }
+  height: 100%;
 }
-.detailLabel {
-  font-weight: var(--fontWeightSemiBold);
-  letter-spacing: -0.09px;
+
+/* ============================================
+   Enhanced Field Treatments
+   ============================================ */
+
+/* ---- Brand: Prominent editorial display ---- */
+
+.brandBlock {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid hsl(240 3% 90%);
+}
+
+.brandLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: hsl(240 3% 50%);
+  margin-bottom: 4px;
+}
+
+.brandValue {
+  display: block;
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: hsl(240 3% 10%);
+  line-height: 1.2;
+}
+
+/* ---- Size: Structured pill ---- */
+
+.sizePill {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid hsl(240 3% 15%);
+  border-radius: 4px;
+  overflow: hidden;
+  background: transparent;
+}
+
+.sizeLabel {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: hsl(240 3% 98%);
+  background: hsl(240 3% 15%);
+  padding: 8px 12px;
+}
+
+.sizeValue {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: hsl(240 3% 10%);
+  padding: 6px 16px;
+}
+
+/* ---- Condition: Color-coded badge ---- */
+
+.conditionBadge {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+}
+
+.conditionDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* New with Tags — green */
+.conditionNew {
+  background: hsl(145 40% 96%);
+  border-color: hsl(145 35% 82%);
+  color: hsl(145 50% 25%);
+}
+.conditionNew .conditionDot {
+  background: hsl(145 55% 42%);
+}
+
+/* Like New — teal */
+.conditionLikeNew {
+  background: hsl(175 35% 95%);
+  border-color: hsl(175 30% 80%);
+  color: hsl(175 45% 25%);
+}
+.conditionLikeNew .conditionDot {
+  background: hsl(175 50% 38%);
+}
+
+/* Good — amber */
+.conditionGood {
+  background: hsl(40 50% 95%);
+  border-color: hsl(40 40% 80%);
+  color: hsl(40 55% 28%);
+}
+.conditionGood .conditionDot {
+  background: hsl(40 65% 48%);
+}
+
+/* Fair — grey */
+.conditionFair {
+  background: hsl(240 3% 96%);
+  border-color: hsl(240 3% 85%);
+  color: hsl(240 3% 35%);
+}
+.conditionFair .conditionDot {
+  background: hsl(240 3% 55%);
 }

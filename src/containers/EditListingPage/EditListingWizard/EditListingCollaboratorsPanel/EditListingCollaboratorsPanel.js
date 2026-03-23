@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import { apiBaseUrl } from '../../../../util/api';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 
@@ -11,25 +12,8 @@ import { H3, ListingLink } from '../../../../components';
 // Import modules from this directory
 import css from './EditListingCollaboratorsPanel.module.css';
 
-/**
- * EditListingCollaboratorsPanel allows the listing owner to manage
- * collaborator user IDs stored in the listing's privateData.
- *
- * @component
- * @param {Object} props
- * @param {string} [props.className]
- * @param {string} [props.rootClassName]
- * @param {propTypes.ownListing} props.listing
- * @param {boolean} props.disabled
- * @param {boolean} props.ready
- * @param {Function} props.onSubmit
- * @param {string} props.submitButtonText
- * @param {boolean} props.panelUpdated
- * @param {boolean} props.updateInProgress
- * @param {Object} props.errors
- * @param {Object} props.intl
- * @returns {JSX.Element}
- */
+const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 const EditListingCollaboratorsPanel = props => {
   const {
     className,
@@ -45,9 +29,10 @@ const EditListingCollaboratorsPanel = props => {
   const listingId = listing?.id?.uuid;
 
   const [collaborators, setCollaborators] = useState([]);
-  const [newUserId, setNewUserId] = useState('');
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const panelHeadingProps = isPublished
     ? {
@@ -61,95 +46,96 @@ const EditListingCollaboratorsPanel = props => {
         messageProps: {},
       };
 
-  // Fetch collaborators on mount and when listingId changes
   const fetchCollaborators = useCallback(() => {
     if (!listingId) return;
     setLoading(true);
     setError(null);
 
-    fetch(`/api/listing-collaborators/${listingId}`, {
+    fetch(`${apiBaseUrl()}/api/listing-collaborators/${listingId}`, {
       method: 'GET',
       credentials: 'include',
     })
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch collaborators.');
-        }
+        if (!res.ok) throw new Error('Failed to fetch collaborators.');
         return res.json();
       })
       .then(json => {
         setCollaborators(json.data || []);
       })
-      .catch(e => {
-        setError(e.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
   }, [listingId]);
 
   useEffect(() => {
     fetchCollaborators();
   }, [fetchCollaborators]);
 
-  const handleAddCollaborator = () => {
-    const trimmedId = newUserId.trim();
-    if (!trimmedId || !listingId) return;
+  const handleAdd = () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !listingId) return;
+
+    if (!isValidEmail(trimmed)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (collaborators.includes(trimmed)) {
+      setError('This collaborator has already been added.');
+      return;
+    }
 
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
-    fetch('/api/listing-collaborators', {
+    fetch(`${apiBaseUrl()}/api/listing-collaborators`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ listingId, userId: trimmedId }),
+      body: JSON.stringify({ listingId, userId: trimmed }),
     })
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to add collaborator.');
-        }
+        if (!res.ok) throw new Error('Failed to add collaborator.');
         return res.json();
       })
       .then(json => {
         setCollaborators(json.data || []);
-        setNewUserId('');
+        setEmail('');
+        setSuccess(`${trimmed} added as collaborator.`);
+        setTimeout(() => setSuccess(null), 3000);
       })
-      .catch(e => {
-        setError(e.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
   };
 
-  const handleRemoveCollaborator = userId => {
+  const handleRemove = collaboratorEmail => {
     if (!listingId) return;
-
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
-    fetch('/api/listing-collaborators', {
+    fetch(`${apiBaseUrl()}/api/listing-collaborators`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ listingId, userId }),
+      body: JSON.stringify({ listingId, userId: collaboratorEmail }),
     })
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to remove collaborator.');
-        }
+        if (!res.ok) throw new Error('Failed to remove collaborator.');
         return res.json();
       })
       .then(json => {
         setCollaborators(json.data || []);
       })
-      .catch(e => {
-        setError(e.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false));
+  };
+
+  const handleKeyDown = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAdd();
+    }
   };
 
   return (
@@ -165,63 +151,65 @@ const EditListingCollaboratorsPanel = props => {
       </H3>
 
       {error ? <p className={css.error}>{error}</p> : null}
-
-      {loading && collaborators.length === 0 ? (
-        <p className={css.loading}>
-          <FormattedMessage id="EditListingCollaboratorsPanel.loading" />
-        </p>
-      ) : null}
-
-      {!loading && collaborators.length === 0 ? (
-        <p className={css.emptyState}>
-          <FormattedMessage id="EditListingCollaboratorsPanel.noCollaborators" />
-        </p>
-      ) : null}
-
-      {collaborators.length > 0 ? (
-        <ul className={css.collaboratorList}>
-          {collaborators.map(userId => (
-            <li key={userId} className={css.collaboratorItem}>
-              <span className={css.collaboratorId}>{userId}</span>
-              <button
-                type="button"
-                className={css.removeButton}
-                onClick={() => handleRemoveCollaborator(userId)}
-                disabled={disabled || loading}
-              >
-                <FormattedMessage id="EditListingCollaboratorsPanel.removeButton" />
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      {success ? <p className={css.success}>{success}</p> : null}
 
       <div className={css.addForm}>
-        <div className={css.inputWrapper}>
-          <label className={css.label} htmlFor="collaboratorUserId">
-            <FormattedMessage id="EditListingCollaboratorsPanel.userIdLabel" />
-          </label>
+        <label className={css.label} htmlFor="collaboratorEmail">
+          Invite by email
+        </label>
+        <div className={css.inputRow}>
           <input
-            id="collaboratorUserId"
+            id="collaboratorEmail"
             className={css.input}
-            type="text"
-            value={newUserId}
-            onChange={e => setNewUserId(e.target.value)}
-            placeholder={intl.formatMessage({
-              id: 'EditListingCollaboratorsPanel.userIdPlaceholder',
-            })}
+            type="email"
+            value={email}
+            onChange={e => { setEmail(e.target.value); setError(null); }}
+            onKeyDown={handleKeyDown}
+            placeholder="name@example.com"
             disabled={disabled || loading}
           />
+          <button
+            type="button"
+            className={css.addButton}
+            onClick={handleAdd}
+            disabled={disabled || loading || !email.trim()}
+          >
+            {loading ? 'Adding...' : 'Add'}
+          </button>
         </div>
-        <button
-          type="button"
-          className={css.addButton}
-          onClick={handleAddCollaborator}
-          disabled={disabled || loading || !newUserId.trim()}
-        >
-          <FormattedMessage id="EditListingCollaboratorsPanel.addButton" />
-        </button>
       </div>
+
+      {collaborators.length > 0 ? (
+        <div className={css.collaboratorSection}>
+          <label className={css.sectionLabel}>
+            Team members ({collaborators.length})
+          </label>
+          <ul className={css.collaboratorList}>
+            {collaborators.map(collab => (
+              <li key={collab} className={css.collaboratorItem}>
+                <div className={css.collaboratorInfo}>
+                  <span className={css.avatar}>
+                    {collab.charAt(0).toUpperCase()}
+                  </span>
+                  <span className={css.collaboratorEmail}>{collab}</span>
+                </div>
+                <button
+                  type="button"
+                  className={css.removeButton}
+                  onClick={() => handleRemove(collab)}
+                  disabled={disabled || loading}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : !loading ? (
+        <p className={css.emptyState}>
+          No team members yet. Add collaborators by email to let them help manage this listing.
+        </p>
+      ) : null}
     </main>
   );
 };

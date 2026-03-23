@@ -1,0 +1,10 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  @media (--viewportMedium) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 32px;
+    align-items: start;
+  }
+}

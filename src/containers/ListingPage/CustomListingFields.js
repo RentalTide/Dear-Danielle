@@ -11,6 +11,8 @@ import {
 
 import CustomExtendedDataSection from '../../components/CustomExtendedDataSection/CustomExtendedDataSection.js';
 
+import css from './CustomListingFields.module.css';
+
 /**
  * Renders custom listing fields.
  * - SectionDetails is used if schemaType is 'enum', 'long', or 'boolean'
@@ -74,12 +76,14 @@ const CustomListingFields = props => {
   };
 
   return (
-    <CustomExtendedDataSection
-      sectionDetailsProps={sectionDetailsProps}
-      propsForCustomFields={propsForCustomFields}
-      idPrefix="listingPage"
-      pickExtendedDataFields={pickExtendedDataFields}
-    />
+    <div className={css.root}>
+      <CustomExtendedDataSection
+        sectionDetailsProps={sectionDetailsProps}
+        propsForCustomFields={propsForCustomFields}
+        idPrefix="listingPage"
+        pickExtendedDataFields={pickExtendedDataFields}
+      />
+    </div>
   );
 };
 

@@ -3,6 +3,8 @@ import classNames from 'classnames';
 
 import { IconSpinner } from '../../components';
 
+import { apiBaseUrl } from '../../util/api';
+
 import css from './AIAssistButton.module.css';
 
 const SparkleIcon = ({ className }) => (
@@ -42,7 +44,7 @@ const AIAssistButton = props => {
     setError(null);
     setSuggestions(null);
 
-    fetch('/api/ai-listing-assist', {
+    fetch(`${apiBaseUrl()}/api/ai-listing-assist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
