@@ -1,9 +1,11 @@
-.root {
+.wrapper {
   position: absolute;
   top: 8px;
   right: 8px;
   z-index: 1;
+}
 
+.root {
   /* Reset button styles */
   border: none;
   background: rgba(255, 255, 255, 0.85);
@@ -33,4 +35,36 @@
 .heartIcon {
   width: 20px;
   height: 20px;
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 200px;
+  padding: 14px 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  text-align: center;
+}
+
+.popoverText {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--colorGrey700);
+}
+
+.popoverLink {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--marketplaceColor);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
